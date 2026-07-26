@@ -1,0 +1,6 @@
+/Users/jacob/projects/sba/nucleo-hal/mcal/cmake/stm32cubemx/../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_bus.h:563:22:LL_AHB2_GRP1_EnableClock	24	static
+/Users/jacob/projects/sba/nucleo-hal/mcal/cmake/stm32cubemx/../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_system.h:775:22:LL_SYSCFG_SetEXTISource	32	static
+/Users/jacob/projects/sba/nucleo-hal/mcal/cmake/stm32cubemx/../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_gpio.h:285:22:LL_GPIO_SetPinMode	48	static
+/Users/jacob/projects/sba/nucleo-hal/mcal/cmake/stm32cubemx/../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_gpio.h:496:22:LL_GPIO_SetPinPull	48	static
+/Users/jacob/projects/sba/nucleo-hal/mcal/cmake/stm32cubemx/../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_gpio.h:985:22:LL_GPIO_ResetOutputPin	16	static
+/Users/jacob/projects/sba/nucleo-hal/mcal/Core/Src/gpio.c:44:6:MX_GPIO_Init	48	static
