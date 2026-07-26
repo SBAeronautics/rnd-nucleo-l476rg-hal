@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/jacob/projects/sba/nucleo-hal/mcal/build/Debug/cmake_install.cmake",
-		"/Users/jacob/projects/sba/nucleo-hal/mcal/build/Debug/cmake/stm32cubemx/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
