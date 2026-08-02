@@ -11,7 +11,7 @@ class DigitalOutput {
     virtual void clear() noexcept = 0;
     virtual void toggle() noexcept = 0;
     virtual void write(bool active) noexcept = 0;
-};
+}; // class DigitalOutput
 
 } // namespace platform
 

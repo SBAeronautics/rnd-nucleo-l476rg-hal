@@ -1,5 +1,5 @@
-#ifndef PLATFORM_INC_DIGITAL_GPIO_HPP
-#define PLATFORM_INC_DIGITAL_GPIO_HPP
+#ifndef PLATFORM_INC_GPIO_HPP
+#define PLATFORM_INC_GPIO_HPP
 
 #include "digital_input.hpp"
 #include "digital_output.hpp"
@@ -22,7 +22,7 @@ class GpioOutput final : public DigitalOutput {
     GPIO_TypeDef* port_;
     std::uint32_t pin_;
     bool active_high_;
-};
+}; // class GpioOutput
 
 class GpioInput final : public DigitalInput {
   public:
@@ -36,8 +36,8 @@ class GpioInput final : public DigitalInput {
     GPIO_TypeDef* port_;
     std::uint32_t pin_;
     bool active_high_;
-};
+}; // class GpioInput
 
 } // namespace platform
 
-#endif // PLATFORM_INC_DIGITAL_GPIO_HPP
+#endif // PLATFORM_INC_GPIO_HPP

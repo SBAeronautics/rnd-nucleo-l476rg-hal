@@ -8,7 +8,7 @@ class DigitalInput {
     virtual ~DigitalInput() = default;
 
     [[nodiscard]] virtual bool read() const noexcept = 0;
-};
+}; // class DigitalInput
 
 } // namespace platform
 
