@@ -6,7 +6,23 @@
 #include "stm32l4xx.h"
 #include <cstdint>
 
+/**
+ * @brief Defines which electrical level represents the active state.
+ */
+enum class ActiveLevel : std::uint8_t {
+    low = false,
+    high = true
+};
+
 namespace platform {
+
+/**
+ * @brief Identifies a physical GPIO pin.
+ */
+struct GpioPin {
+    GPIO_TypeDef* port;
+    std::uint32_t pin;
+};
 
 /**
  * @brief STM32 GPIO implementation of a digital output.
@@ -17,15 +33,28 @@ class GpioOutput final : public DigitalOutput {
     // Public Constructors and Destructors
 
     /**
-     * @brief Constructs a GPIO-backed digital output.
+     * @brief Constructs a GPIO output.
      *
      * @param port GPIO peripheral containing the output pin.
-     * @param pin STM32 LL pin mask identifying the output pin.
-     * @param active_high `true` when a high pin level represents the active
-     * state; `false` when a low pin level represents the active state.
+     * @param pin STM32 LL pin mask.
+     * @param active_level Electrical level representing the active state.
      */
-    explicit constexpr GpioOutput(GPIO_TypeDef* port, std::uint32_t pin, bool active_high = true) noexcept
-        : port_{port}, pin_{pin}, active_high_{active_high} {}
+    explicit constexpr GpioOutput(GPIO_TypeDef* port,
+                                  std::uint32_t pin,
+                                  ::ActiveLevel active_level = ::ActiveLevel::high) noexcept
+        : port_{port}, pin_{pin}, active_level_{active_level} {}
+
+    /**
+     * @brief Constructs a GPIO output from a pin descriptor.
+     *
+     * @param pin GPIO pin descriptor.
+     * @param active_level Electrical level representing the active state.
+     */
+    explicit constexpr GpioOutput(GpioPin pin,
+                                  ::ActiveLevel active_level = ::ActiveLevel::high) noexcept
+        : GpioOutput{pin.port,
+                     pin.pin,
+                     active_level} {}
 
     // -------------------------------------------------------------------------
     // Public Member Methods
@@ -55,7 +84,7 @@ class GpioOutput final : public DigitalOutput {
   private:
     GPIO_TypeDef* port_;
     std::uint32_t pin_;
-    bool active_high_;
+    ActiveLevel active_level_;
 }; // class GpioOutput
 
 /**
@@ -67,15 +96,28 @@ class GpioInput final : public DigitalInput {
     // Public Constructors and Destructors
 
     /**
-     * @brief Constructs a GPIO-backed digital input.
+     * @brief Constructs a GPIO input.
      *
      * @param port GPIO peripheral containing the input pin.
-     * @param pin STM32 LL pin mask identifying the input pin.
-     * @param active_high `true` when a high pin level represents the active
-     * state; `false` when a low pin level represents the active state.
+     * @param pin STM32 LL pin mask.
+     * @param active_level Electrical level representing the active state.
      */
-    explicit constexpr GpioInput(GPIO_TypeDef* port, std::uint32_t pin, bool active_high = true) noexcept
-        : port_{port}, pin_{pin}, active_high_{active_high} {}
+    constexpr GpioInput(GPIO_TypeDef* port,
+                        std::uint32_t pin,
+                        ::ActiveLevel active_level = ::ActiveLevel::high) noexcept
+        : port_{port}, pin_{pin}, active_level_{active_level} {}
+
+    /**
+     * @brief Constructs a GPIO input from a pin descriptor.
+     *
+     * @param pin GPIO pin descriptor.
+     * @param active_level Electrical level representing the active state.
+     */
+    constexpr GpioInput(GpioPin pin,
+                        ::ActiveLevel active_level = ::ActiveLevel::high) noexcept
+        : GpioInput{pin.port,
+                    pin.pin,
+                    active_level} {}
 
     // -------------------------------------------------------------------------
     // Public Member Methods
@@ -90,7 +132,7 @@ class GpioInput final : public DigitalInput {
   private:
     GPIO_TypeDef* port_;
     std::uint32_t pin_;
-    bool active_high_;
+    ActiveLevel active_level_;
 }; // class GpioInput
 
 } // namespace platform

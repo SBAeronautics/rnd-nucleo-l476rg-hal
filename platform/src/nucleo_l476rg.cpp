@@ -1,11 +1,13 @@
 #include "nucleo_l476rg.hpp"
 
 #include "gpio.hpp"
+#include "spi.hpp"
 #include "system_clock.hpp"
 #include "uart.hpp"
 
 extern "C" {
 #include "gpio.h"
+#include "spi.h"
 #include "system_stm32l4xx.h"
 #include "usart.h"
 }
@@ -19,15 +21,15 @@ extern "C" {
 
 namespace {
 
-platform::GpioOutput status_led_device{
-    GPIOA,
-    LL_GPIO_PIN_5,
-    true};
+platform::GpioOutput status_led_device{GPIOA,
+                                       LL_GPIO_PIN_5,
+                                       ActiveLevel::high};
 
-platform::GpioInput user_button_device{
-    GPIOC,
-    LL_GPIO_PIN_13,
-    false};
+platform::GpioInput user_button_device{GPIOC,
+                                       LL_GPIO_PIN_13,
+                                       ActiveLevel::low};
+
+platform::Spi spi2_device{SPI2};
 
 platform::Uart console_device{USART2};
 
@@ -42,6 +44,7 @@ void cube_mx_init() noexcept {
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
 
     MX_GPIO_Init();
+    MX_SPI2_Init();
     MX_USART2_UART_Init();
 
     SystemCoreClockUpdate();
@@ -58,6 +61,14 @@ void cube_mx_init() noexcept {
 }
 
 } // namespace
+
+namespace platform::nucleo_l476rg::pins {
+
+const GpioPin pb12{
+    GPIOB,
+    LL_GPIO_PIN_12};
+
+} // namespace platform::nucleo_l476rg::pins
 
 namespace platform::nucleo_l476rg {
 
@@ -79,6 +90,10 @@ DigitalInput& user_button() noexcept {
 
 Uart& console() noexcept {
     return console_device;
+}
+
+Spi& spi2() noexcept {
+    return spi2_device;
 }
 
 bool take_user_button_press() noexcept {

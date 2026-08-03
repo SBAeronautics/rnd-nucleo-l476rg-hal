@@ -3,6 +3,8 @@
 
 #include "digital_input.hpp"
 #include "digital_output.hpp"
+#include "gpio.hpp"
+#include "spi.hpp"
 #include "stm32l4xx.h"
 #include "uart.hpp"
 #include <cstdint>
@@ -39,6 +41,26 @@ DigitalOutput& status_led() noexcept;
  */
 DigitalInput& user_button() noexcept;
 
+// -------------------------------------------------------------------------
+// SPI Interface (PB10, PC2, PC3)
+
+/**
+ * @brief Gets the SPI2 master peripheral.
+ *
+ * @return SPI2 master interface.
+ */
+Spi& spi2() noexcept;
+
+/**
+ * @brief Gets the chip-select output associated with SPI2.
+ *
+ * @return Active-low chip-select output.
+ */
+DigitalOutput& spi2_chip_select() noexcept;
+
+// -------------------------------------------------------------------------
+// USART2 Interface (PA2, PA3)
+
 /**
  * @brief Gets the UART connected to the ST-LINK virtual COM port.
  *
@@ -54,6 +76,15 @@ Uart& console() noexcept;
  * @note A pending event is cleared when this function returns `true`.
  */
 [[nodiscard]] bool take_user_button_press() noexcept;
+
+namespace pins {
+
+/**
+ * @brief Generic PB12 board pin.
+ */
+extern const GpioPin pb12;
+
+} // namespace pins
 
 namespace detail {
 
