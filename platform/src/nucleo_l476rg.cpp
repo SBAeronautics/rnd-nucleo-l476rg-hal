@@ -2,10 +2,12 @@
 
 #include "gpio.hpp"
 #include "system_clock.hpp"
+#include "uart.hpp"
 
 extern "C" {
 #include "gpio.h"
 #include "system_stm32l4xx.h"
+#include "usart.h"
 }
 
 #include "stm32l4xx_ll_bus.h"
@@ -27,6 +29,8 @@ platform::GpioInput user_button_device{
     LL_GPIO_PIN_13,
     false};
 
+platform::Uart console_device{USART2};
+
 std::atomic_bool user_button_press_pending{false};
 
 void cube_mx_init() noexcept {
@@ -38,6 +42,7 @@ void cube_mx_init() noexcept {
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
 
     MX_GPIO_Init();
+    MX_USART2_UART_Init();
 
     SystemCoreClockUpdate();
     LL_Init1msTick(SystemCoreClock);
@@ -70,6 +75,10 @@ DigitalOutput& status_led() noexcept {
 
 DigitalInput& user_button() noexcept {
     return user_button_device;
+}
+
+Uart& console() noexcept {
+    return console_device;
 }
 
 bool take_user_button_press() noexcept {

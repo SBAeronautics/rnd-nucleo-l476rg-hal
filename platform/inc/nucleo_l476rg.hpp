@@ -4,10 +4,7 @@
 #include "digital_input.hpp"
 #include "digital_output.hpp"
 #include "stm32l4xx.h"
-#include <cstdint>
-
-#include "digital_output.hpp"
-
+#include "uart.hpp"
 #include <cstdint>
 
 namespace platform::nucleo_l476rg {
@@ -41,6 +38,13 @@ DigitalOutput& status_led() noexcept;
  * @return Reference to the digital input representing the user button.
  */
 DigitalInput& user_button() noexcept;
+
+/**
+ * @brief Gets the UART connected to the ST-LINK virtual COM port.
+ *
+ * @return Reference to the UART used for console communication.
+ */
+Uart& console() noexcept;
 
 /**
  * @brief Consumes a pending user-button press event.

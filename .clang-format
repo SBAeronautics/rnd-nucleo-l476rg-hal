@@ -19,6 +19,7 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 SpaceBeforeParens: ControlStatements
+AllowShortBlocksOnASingleLine: Empty
 
 # Pointers
 PointerAlignment: Left
