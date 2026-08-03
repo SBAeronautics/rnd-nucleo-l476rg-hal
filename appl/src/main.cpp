@@ -4,20 +4,26 @@
 volatile std::uint32_t measured_clock_hz = 0;
 volatile platform::clock::Source measured_clock_source{};
 
+/**
+ * @brief Application entry point.
+ *
+ * Initializes the board and toggles the status LED whenever the user-button
+ * interrupt records a press event.
+ *
+ * @return This function does not return.
+ */
 int main() {
     platform::nucleo_l476rg::initialize();
 
-    measured_clock_hz = platform::clock::frequency_hz();
+    volatile int x = 10;
 
-    measured_clock_source = platform::clock::source();
-
-    auto& led = platform::nucleo_l476rg::status_led();
+    auto& led =
+        platform::nucleo_l476rg::status_led();
 
     while (true) {
-        led.set();
-        platform::nucleo_l476rg::delay_ms(100U);
-
-        led.clear();
-        platform::nucleo_l476rg::delay_ms(4900U);
+        if (platform::nucleo_l476rg::take_user_button_press()) {
+            led.toggle();
+            ++x;
+        }
     }
 }

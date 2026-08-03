@@ -76,4 +76,8 @@ std::uint32_t frequency_hz() noexcept {
     return SystemCoreClock;
 }
 
+void delay_ms(std::uint32_t milliseconds) noexcept {
+    LL_mDelay(milliseconds);
+}
+
 } // namespace platform::clock
