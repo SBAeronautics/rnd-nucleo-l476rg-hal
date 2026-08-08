@@ -4,10 +4,7 @@ namespace application::sensors {
 
 Adxl345::Adxl345(platform::Spi& spi,
                  platform::GpioPin chip_select_pin) noexcept
-    : device_{spi,
-              chip_select_pin,
-              ::ActiveLevel::low} {
-}
+    : device_{spi, chip_select_pin, ::ActiveLevel::low} {}
 
 SensorStatus Adxl345::initialize() noexcept {
     this->initialized_ = false;
@@ -212,14 +209,14 @@ void append_integer(char* buffer,
                     std::size_t capacity,
                     std::size_t& position,
                     std::int16_t value) noexcept {
-    std::int32_t signed_value = static_cast<std::int32_t>(value);
+    std::int32_t signed_value{static_cast<std::int32_t>(value)};
 
     if (signed_value < 0) {
         append_character(buffer, capacity, position, '-');
         signed_value = -signed_value;
     }
 
-    std::uint32_t magnitude = static_cast<std::uint32_t>(signed_value);
+    std::uint32_t magnitude{static_cast<std::uint32_t>(signed_value)};
 
     if (magnitude == 0U) {
         append_character(buffer, capacity, position, '0');
@@ -227,7 +224,7 @@ void append_integer(char* buffer,
     }
 
     char digits[5]{};
-    std::size_t digit_count = 0U;
+    std::size_t digit_count{0U};
 
     while ((magnitude > 0U) && (digit_count < sizeof(digits))) {
         digits[digit_count] = static_cast<char>('0' + (magnitude % 10U));
@@ -237,19 +234,14 @@ void append_integer(char* buffer,
 
     while (digit_count > 0U) {
         --digit_count;
-
         append_character(buffer, capacity, position, digits[digit_count]);
     }
 }
 
-} // namespace application::sensors
-
-namespace application::sensors {
-
 [[nodiscard]] std::size_t format_sample(const application::sensors::AccelerationSample& sample,
                                         char* buffer,
                                         std::size_t capacity) noexcept {
-    std::size_t position = 0U;
+    std::size_t position{0U};
 
     append_text(buffer, capacity, position, "X: ");
     append_integer(buffer, capacity, position, sample.x);

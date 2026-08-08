@@ -8,10 +8,6 @@
 
 /**
  * @brief Application entry point.
- *
- * Initializes the board and toggles the status LED whenever the user-button
- * interrupt records a press event.
- *
  * @return This function does not return.
  */
 int main() {
@@ -24,8 +20,8 @@ int main() {
 
     console.write_line("ADXL345 acceleration test");
 
-    sensors::Adxl345 accelerometer{board::spi2(),
-                                   board::pins::pb12};
+    sensors::Adxl345 accelerometer{board::spi1(),
+                                   board::pins::pa4};
 
     const sensors::SensorStatus initialization_status = accelerometer.initialize();
 

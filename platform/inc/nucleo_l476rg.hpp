@@ -42,21 +42,21 @@ DigitalOutput& status_led() noexcept;
 DigitalInput& user_button() noexcept;
 
 // -------------------------------------------------------------------------
-// SPI Interface (PB10, PC2, PC3)
+// SPI Interface (FIX)
 
 /**
- * @brief Gets the SPI2 master peripheral.
+ * @brief Gets the SPI1 master peripheral.
  *
- * @return SPI2 master interface.
+ * @return SPI1 master interface.
  */
-Spi& spi2() noexcept;
+Spi& spi1() noexcept;
 
 /**
- * @brief Gets the chip-select output associated with SPI2.
+ * @brief Gets the chip-select output associated with SPI1.
  *
  * @return Active-low chip-select output.
  */
-DigitalOutput& spi2_chip_select() noexcept;
+DigitalOutput& spi1_chip_select() noexcept;
 
 // -------------------------------------------------------------------------
 // USART2 Interface (PA2, PA3)
@@ -80,9 +80,9 @@ Uart& console() noexcept;
 namespace pins {
 
 /**
- * @brief Generic PB12 board pin.
+ * @brief PA4 GPIO pin used as the ADXL345 chip-select signal.
  */
-extern const GpioPin pb12;
+extern const GpioPin pa4;
 
 } // namespace pins
 

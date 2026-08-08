@@ -17,10 +17,7 @@ SpiStatus SpiDevice::transfer(const std::uint8_t* transmit,
                               std::size_t size) noexcept {
     ChipSelectGuard chip_select_guard{chip_select_};
 
-    return spi_.transfer(
-        transmit,
-        receive,
-        size);
+    return spi_.transfer(transmit, receive, size);
 }
 
 SpiStatus SpiDevice::write_then_read(const std::uint8_t* command,
@@ -29,17 +26,13 @@ SpiStatus SpiDevice::write_then_read(const std::uint8_t* command,
                                      std::size_t receive_size) noexcept {
     ChipSelectGuard chip_select_guard{chip_select_};
 
-    SpiStatus status = spi_.transfer(command,
-                                     nullptr,
-                                     command_size);
+    SpiStatus status = spi_.transfer(command, nullptr, command_size);
 
     if (status != SpiStatus::ok) {
         return status;
     }
 
-    return spi_.transfer(nullptr,
-                         receive,
-                         receive_size);
+    return spi_.transfer(nullptr, receive, receive_size);
 }
 
 } // namespace platform
