@@ -4,6 +4,7 @@
 #include "digital_input.hpp"
 #include "digital_output.hpp"
 #include "gpio.hpp"
+#include "i2c.hpp"
 #include "spi.hpp"
 #include "stm32l4xx.h"
 #include "uart.hpp"
@@ -51,12 +52,15 @@ DigitalInput& user_button() noexcept;
  */
 Spi& spi1() noexcept;
 
+// -------------------------------------------------------------------------
+// I2C1 Interface (PB6, PB7)
+
 /**
- * @brief Gets the chip-select output associated with SPI1.
+ * @brief Gets the I2C1 master peripheral.
  *
- * @return Active-low chip-select output.
+ * @return I2C1 master interface.
  */
-DigitalOutput& spi1_chip_select() noexcept;
+I2c& i2c1() noexcept;
 
 // -------------------------------------------------------------------------
 // USART2 Interface (PA2, PA3)
@@ -76,6 +80,22 @@ Uart& console() noexcept;
  * @note A pending event is cleared when this function returns `true`.
  */
 [[nodiscard]] bool take_user_button_press() noexcept;
+
+namespace sockets {
+
+/**
+ * @brief 7-bit I2C address used by the board's temperature sensor socket.
+ *
+ * Update this value to match the board socket device installed on the board.
+ */
+extern const std::uint8_t temperature_sensor_address;
+
+/**
+ * @brief Register address in the socket device that exposes temperature.
+ */
+extern const std::uint8_t temperature_sensor_register;
+
+} // namespace sockets
 
 namespace pins {
 

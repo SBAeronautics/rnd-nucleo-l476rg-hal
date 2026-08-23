@@ -1,6 +1,7 @@
 #include "nucleo_l476rg.hpp"
 
 #include "gpio.hpp"
+#include "i2c.hpp"
 #include "spi.hpp"
 #include "system_clock.hpp"
 #include "uart.hpp"
@@ -15,6 +16,7 @@ extern "C" {
 #include "stm32l4xx_ll_bus.h"
 #include "stm32l4xx_ll_exti.h"
 #include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_rcc.h"
 #include "stm32l4xx_ll_utils.h"
 
 #include <atomic>
@@ -23,6 +25,7 @@ namespace {
 
 platform::GpioOutput status_led_device{GPIOA, LL_GPIO_PIN_5, ActiveLevel::high};
 platform::GpioInput user_button_device{GPIOC, LL_GPIO_PIN_13, ActiveLevel::low};
+platform::I2c i2c1_device{I2C1};
 platform::Spi spi1_device{SPI1};
 platform::Uart console_device{USART2};
 
@@ -56,6 +59,13 @@ void cube_mx_init() noexcept {
 
 } // namespace
 
+namespace platform::nucleo_l476rg::sockets {
+
+const std::uint8_t temperature_sensor_address{0x48U};
+const std::uint8_t temperature_sensor_register{0x00U};
+
+} // namespace platform::nucleo_l476rg::sockets
+
 namespace platform::nucleo_l476rg::pins {
 
 const GpioPin pa4{GPIOA, LL_GPIO_PIN_4};
@@ -68,6 +78,9 @@ void initialize() noexcept {
     // CubeMX-generated clock initialization.
     cube_mx_init();
 
+    // Initialize board peripherals that are not created by CubeMX.
+    i2c1_device.initialize();
+
     // Start with the LED turned off.
     status_led_device.clear();
 }
@@ -78,6 +91,10 @@ DigitalOutput& status_led() noexcept {
 
 DigitalInput& user_button() noexcept {
     return user_button_device;
+}
+
+I2c& i2c1() noexcept {
+    return i2c1_device;
 }
 
 Uart& console() noexcept {
