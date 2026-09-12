@@ -38,14 +38,7 @@ class ChipSelectGuard final {
         chip_select_.clear();
     }
 
-    /**
-     * @brief Prevents copying of the chip-select guard.
-     */
     ChipSelectGuard(const ChipSelectGuard&) = delete;
-
-    /**
-     * @brief Prevents copy assignment of the chip-select guard.
-     */
     ChipSelectGuard& operator=(const ChipSelectGuard&) = delete;
 
   private:
@@ -73,9 +66,7 @@ class SpiDevice final {
      * @param chip_select_pin GPIO pin connected to the device chip-select.
      * @param active_level Electrical level that selects the device.
      */
-    SpiDevice(Spi& spi,
-              GpioPin chip_select_pin,
-              ::ActiveLevel active_level = ::ActiveLevel::low) noexcept;
+    SpiDevice(Spi& spi, GpioPin chip_select_pin, ::ActiveLevel active_level = ::ActiveLevel::low) noexcept;
 
     // -------------------------------------------------------------------------
     // Public Member Methods

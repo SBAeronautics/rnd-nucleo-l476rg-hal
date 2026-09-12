@@ -10,6 +10,8 @@ constexpr std::uint8_t dummy_byte{0xFFU};
 
 namespace platform {
 
+Spi::Spi(SPI_TypeDef* instance) : instance_{instance} {}
+
 SpiStatus Spi::transfer(const std::uint8_t* transmit,
                         std::uint8_t* receive,
                         std::size_t size) noexcept {

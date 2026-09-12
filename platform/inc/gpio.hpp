@@ -41,8 +41,7 @@ class GpioOutput final : public DigitalOutput {
      */
     explicit constexpr GpioOutput(GPIO_TypeDef* port,
                                   std::uint32_t pin,
-                                  ::ActiveLevel active_level = ::ActiveLevel::high) noexcept
-        : port_{port}, pin_{pin}, active_level_{active_level} {}
+                                  ::ActiveLevel active_level = ::ActiveLevel::high) noexcept;
 
     /**
      * @brief Constructs a GPIO output from a pin descriptor.
@@ -51,10 +50,7 @@ class GpioOutput final : public DigitalOutput {
      * @param active_level Electrical level representing the active state.
      */
     explicit constexpr GpioOutput(GpioPin pin,
-                                  ::ActiveLevel active_level = ::ActiveLevel::high) noexcept
-        : GpioOutput{pin.port,
-                     pin.pin,
-                     active_level} {}
+                                  ::ActiveLevel active_level = ::ActiveLevel::high) noexcept;
 
     // -------------------------------------------------------------------------
     // Public Member Methods

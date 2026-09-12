@@ -4,6 +4,15 @@
 
 namespace platform {
 
+GpioOutput::GpioOutput(GPIO_TypeDef* port,
+                       std::uint32_t pin,
+                       ::ActiveLevel active_level = ::ActiveLevel::high)
+    : port_{port}, pin_{pin}, active_level_{active_level} {}
+
+GpioOutput::GpioOutput(GpioPin pin,
+                       ::ActiveLevel active_level = ::ActiveLevel::high)
+    : GpioOutput{pin.port, pin.pin, active_level} {}
+
 void GpioOutput::set() noexcept {
     if (active_level_ == ::ActiveLevel::high) {
         LL_GPIO_SetOutputPin(port_, pin_);

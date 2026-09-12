@@ -21,9 +21,7 @@ class Uart final {
      *
      * @param instance USART peripheral instance.
      */
-    constexpr explicit Uart(USART_TypeDef* instance) noexcept
-        : instance_{instance} {
-    }
+    constexpr explicit Uart(USART_TypeDef* instance) noexcept;
 
     // -------------------------------------------------------------------------
     // Public Member Methods

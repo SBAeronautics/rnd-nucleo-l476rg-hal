@@ -4,6 +4,8 @@
 
 namespace platform {
 
+Uart::Uart(USART_TypeDef* instance) : instance_{instance} {}
+
 void Uart::write_byte(std::uint8_t byte) noexcept {
     while (LL_USART_IsActiveFlag_TXE(instance_) == 0U) {}
 

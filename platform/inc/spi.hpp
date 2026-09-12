@@ -30,9 +30,7 @@ class Spi final {
      *
      * @param instance STM32 SPI peripheral instance.
      */
-    constexpr explicit Spi(SPI_TypeDef* instance) noexcept
-        : instance_{instance} {
-    }
+    constexpr explicit Spi(SPI_TypeDef* instance) noexcept;
 
     // -------------------------------------------------------------------------
     // Public Member Methods

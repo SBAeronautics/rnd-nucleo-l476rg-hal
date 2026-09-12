@@ -7,7 +7,9 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 add_subdirectory(sensors)
+add_subdirectory(state)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     appl_sensors
+    appl_statemachine 
 )
