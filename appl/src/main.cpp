@@ -29,9 +29,7 @@ int main() {
         console.write_line("ADXL345 initialization failed:");
         console.write_line(to_string(initialization_status));
 
-        while (true) {
-            // Stop here so that the initialization error remains visible.
-        }
+        while (true); // Stop here so that the initialization error remains visible.
     }
 
     console.write_line("ADXL345 initialized successfully");

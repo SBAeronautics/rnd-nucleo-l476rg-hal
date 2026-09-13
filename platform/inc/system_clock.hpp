@@ -8,11 +8,13 @@ namespace platform::clock {
 /**
  * @brief Available system-clock sources.
  */
-enum class Source : std::uint8_t { msi,
-                                   hsi16,
-                                   hse,
-                                   pll,
-                                   unknown };
+enum class Source : std::uint8_t {
+    msi,
+    hsi16,
+    hse,
+    pll,
+    unknown
+};
 
 /**
  * @brief Configures the MCU system clock.

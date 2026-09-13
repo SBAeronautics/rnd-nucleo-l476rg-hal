@@ -46,6 +46,8 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+/* Allow the platform interrupt implementation to override the generated stub. */
+void DMA1_Channel7_IRQHandler(void) __attribute__((weak));
 
 /* USER CODE END PFP */
 
@@ -185,7 +187,7 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
+
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */

@@ -1,11 +1,13 @@
 #include "nucleo_l476rg.hpp"
 
+#include "dma.hpp"
 #include "gpio.hpp"
 #include "spi.hpp"
 #include "system_clock.hpp"
 #include "uart.hpp"
 
 extern "C" {
+#include "dma.h"
 #include "gpio.h"
 #include "spi.h"
 #include "system_stm32l4xx.h"
@@ -24,7 +26,7 @@ namespace {
 platform::GpioOutput status_led_device{GPIOA, LL_GPIO_PIN_5, ActiveLevel::high};
 platform::GpioInput user_button_device{GPIOC, LL_GPIO_PIN_13, ActiveLevel::low};
 platform::Spi spi1_device{SPI1};
-platform::Uart console_device{USART2};
+platform::Uart console_device{USART2, platform::DmaChannel{DMA1, LL_DMA_CHANNEL_7}};
 
 std::atomic_bool user_button_press_pending{false};
 
@@ -37,9 +39,10 @@ void cube_mx_init() noexcept {
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
 
     MX_GPIO_Init();
+    MX_DMA_Init();
+    MX_USART2_UART_Init();
     MX_SPI1_Init();
     LL_SPI_Enable(SPI1);
-    MX_USART2_UART_Init();
 
     SystemCoreClockUpdate();
     LL_Init1msTick(SystemCoreClock);
@@ -95,6 +98,14 @@ bool take_user_button_press() noexcept {
 }
 
 namespace detail {
+
+void handle_console_transmit_dma_complete() noexcept {
+    console_device.handle_transmit_dma_complete();
+}
+
+void handle_console_transmit_dma_error() noexcept {
+    console_device.handle_transmit_dma_error();
+}
 
 void handle_user_button_exti() noexcept {
     if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_13) != 0U) {

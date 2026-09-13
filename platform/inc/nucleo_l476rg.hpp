@@ -3,6 +3,7 @@
 
 #include "digital_input.hpp"
 #include "digital_output.hpp"
+#include "dma.hpp"
 #include "gpio.hpp"
 #include "spi.hpp"
 #include "stm32l4xx.h"
@@ -97,6 +98,18 @@ namespace detail {
  * @note Intended to be called only from `EXTI15_10_IRQHandler()`.
  */
 void handle_user_button_exti() noexcept;
+
+/**
+ * @brief Handles completion of the console UART transmit DMA transfer.
+ * @note Intended to be called only from `DMA1_Channel7_IRQHandler()`.
+ */
+void handle_console_transmit_dma_complete() noexcept;
+
+/**
+ * @brief Handles an error during the console UART transmit DMA transfer.
+ * @note Intended to be called only from `DMA1_Channel7_IRQHandler()`.
+ */
+void handle_console_transmit_dma_error() noexcept;
 
 } // namespace detail
 
