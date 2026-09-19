@@ -72,7 +72,25 @@ std::uint32_t frequency_hz() noexcept {
 }
 
 void delay_ms(std::uint32_t milliseconds) noexcept {
+    if (milliseconds == 0U) return;
     LL_mDelay(milliseconds);
+}
+
+void delay_us(std::uint32_t microseconds) noexcept {
+    if (microseconds == 0U) return;
+
+    CoreDebug->DEMCR = CoreDebug->DEMCR | CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CTRL = DWT->CTRL | DWT_CTRL_CYCCNTENA_Msk;
+    __DSB();
+    __ISB();
+
+    const std::uint32_t cycles_per_us{(SystemCoreClock + 999999U) / 1000000U};
+
+    while (microseconds != 0U) {
+        const std::uint32_t start{DWT->CYCCNT};
+        while (static_cast<std::uint32_t>(DWT->CYCCNT - start) < cycles_per_us);
+        --microseconds;
+    }
 }
 
 } // namespace platform::clock

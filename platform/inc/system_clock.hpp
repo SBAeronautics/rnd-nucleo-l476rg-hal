@@ -49,6 +49,15 @@ void configure() noexcept;
  */
 void delay_ms(std::uint32_t milliseconds) noexcept;
 
+/**
+ * @brief Busy-waits for at least the requested number of microseconds.
+ *
+ * Uses the Cortex-M4 cycle counter and enables it without resetting its value.
+ * Call after clock configuration; SystemCoreClock must reflect the CPU clock.
+ * Interrupts remain enabled and may extend the delay.
+ */
+void delay_us(std::uint32_t microseconds) noexcept;
+
 } // namespace platform::clock
 
 #endif // PLATFORM_INC_SYSTE_CLOCK_HPP

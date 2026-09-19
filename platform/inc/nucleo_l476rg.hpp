@@ -13,14 +13,25 @@
 namespace platform::nucleo_l476rg {
 
 /**
+ * @brief Selects the board's SPI1 wiring and bus configuration.
+ */
+enum class Spi1Profile : std::uint8_t {
+    generated,     ///< CubeMX settings used by the main application.
+    arduino_mode0  ///< PA5/6/7, PB6 CS, Mode 0, 8-bit MSB-first, 625 kHz.
+};
+
+/**
  * @brief Initializes the NUCLEO-L476RG platform.
  *
  * Configures the system clock, SysTick time base, GPIO peripherals, status LED,
  * and user-button interrupt.
  *
+ * @param spi1_profile SPI1 board configuration. The Arduino profile also
+ * configures PB6 as an inactive-high chip-select output and reserves PA5 for
+ * SCK, making the status LED unavailable.
  * @note Call this function once before accessing any board devices.
  */
-void initialize() noexcept;
+void initialize(Spi1Profile spi1_profile = Spi1Profile::generated) noexcept;
 
 // -------------------------------------------------------------------------
 // On-board LED (PA5)
@@ -84,6 +95,11 @@ namespace pins {
  * @brief PA4 GPIO pin used as the ADXL345 chip-select signal.
  */
 extern const GpioPin pa4;
+
+/**
+ * @brief PB6 chip-select pin, configured by the arduino_mode0 SPI1 profile.
+ */
+extern const GpioPin pb6;
 
 } // namespace pins
 

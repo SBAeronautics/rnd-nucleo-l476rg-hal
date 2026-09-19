@@ -3,6 +3,7 @@
 
 #include "stm32l4xx.h"
 
+#include <atomic>
 #include <cstddef>
 #include <cstdint>
 

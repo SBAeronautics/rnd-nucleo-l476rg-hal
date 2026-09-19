@@ -7,53 +7,6 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace {
-
-/**
- * @brief Manages an SPI device chip-select signal for one transaction.
- *
- * Selects the device when constructed and deselects it when destroyed. The
- * guard should remain in scope for the entire SPI transaction.
- */
-class ChipSelectGuard final {
-  public:
-    // -------------------------------------------------------------------------
-    // Public Constructors and Destructors
-
-    /**
-     * @brief Selects the SPI device.
-     *
-     * @param chip_select Active-state-aware GPIO output controlling the
-     * device chip-select signal.
-     */
-    explicit ChipSelectGuard(platform::GpioOutput& chip_select) noexcept
-        : chip_select_{chip_select} {
-        chip_select_.set();
-    }
-
-    /**
-     * @brief Deselects the SPI device.
-     */
-    ~ChipSelectGuard() {
-        chip_select_.clear();
-    }
-
-    /**
-     * @brief Prevents copying of the chip-select guard.
-     */
-    ChipSelectGuard(const ChipSelectGuard&) = delete;
-
-    /**
-     * @brief Prevents copy assignment of the chip-select guard.
-     */
-    ChipSelectGuard& operator=(const ChipSelectGuard&) = delete;
-
-  private:
-    platform::GpioOutput& chip_select_;
-};
-
-} // namespace
-
 namespace platform {
 
 /**
@@ -72,10 +25,13 @@ class SpiDevice final {
      * @param spi Shared SPI bus.
      * @param chip_select_pin GPIO pin connected to the device chip-select.
      * @param active_level Electrical level that selects the device.
+     * @param chip_select_hold_us Minimum delay before releasing chip select
+     * after the transfer returns. Requires the platform clock to be initialized.
      */
     SpiDevice(Spi& spi,
               GpioPin chip_select_pin,
-              ::ActiveLevel active_level = ::ActiveLevel::low) noexcept;
+              ::ActiveLevel active_level = ::ActiveLevel::low,
+              std::uint32_t chip_select_hold_us = 0U) noexcept;
 
     // -------------------------------------------------------------------------
     // Public Member Methods
@@ -88,7 +44,10 @@ class SpiDevice final {
     /**
      * @brief Performs one complete SPI transaction.
      *
-     * Chip select remains active for the entire transfer.
+     * Chip select remains active for the entire transfer and configured hold time.
+     * On success, the hold starts after the SPI peripheral becomes idle.
+     * A timeout still releases chip select after the hold; it does not guarantee
+     * the peripheral is idle.
      *
      * @param transmit Transmit buffer, or nullptr to send dummy bytes.
      * @param receive Receive buffer, or nullptr to discard received bytes.
@@ -119,6 +78,7 @@ class SpiDevice final {
   private:
     Spi& spi_;
     GpioOutput chip_select_;
+    std::uint32_t chip_select_hold_us_;
 };
 
 } // namespace platform
