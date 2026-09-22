@@ -13,9 +13,7 @@ class ChipSelectGuard final {
     }
 
     ~ChipSelectGuard() {
-        if (hold_us_ != 0U) {
-            platform::clock::delay_us(hold_us_);
-        }
+        if (hold_us_ != 0U) platform::clock::delay_us(hold_us_);
         chip_select_.clear();
     }
 
@@ -31,24 +29,21 @@ class ChipSelectGuard final {
 
 namespace platform {
 
-SpiDevice::SpiDevice(Spi& spi,
-                     GpioPin chip_select_pin,
-                     ::ActiveLevel active_level,
-                     std::uint32_t chip_select_hold_us) noexcept
-    : spi_{spi}, chip_select_{chip_select_pin, active_level},
-      chip_select_hold_us_{chip_select_hold_us} {
-}
+SpiDevice::SpiDevice(Spi& spi, GpioPin chip_select_pin, ::ActiveLevel active_level, std::uint32_t chip_select_hold_us) noexcept
+    : spi_{spi}, chip_select_{chip_select_pin, active_level}, chip_select_hold_us_{chip_select_hold_us} {}
 
 void SpiDevice::initialize() noexcept {
     chip_select_.clear();
 }
 
-SpiStatus SpiDevice::transfer(const std::uint8_t* transmit,
-                              std::uint8_t* receive,
-                              std::size_t size) noexcept {
+SpiStatus SpiDevice::transfer(const std::uint8_t* transmit, std::uint8_t* receive, std::size_t size) noexcept {
     ChipSelectGuard chip_select_guard{chip_select_, chip_select_hold_us_};
-
     return spi_.transfer(transmit, receive, size);
+}
+
+SpiStatus SpiDevice::transfer_dma(const std::uint8_t* transmit, std::uint8_t* receive, std::size_t size) noexcept {
+    ChipSelectGuard chip_select_guard{chip_select_, chip_select_hold_us_};
+    return spi_.transfer_dma(transmit, receive, size);
 }
 
 SpiStatus SpiDevice::write_then_read(const std::uint8_t* command,
@@ -56,14 +51,19 @@ SpiStatus SpiDevice::write_then_read(const std::uint8_t* command,
                                      std::uint8_t* receive,
                                      std::size_t receive_size) noexcept {
     ChipSelectGuard chip_select_guard{chip_select_, chip_select_hold_us_};
-
-    SpiStatus status = spi_.transfer(command, nullptr, command_size);
-
-    if (status != SpiStatus::ok) {
-        return status;
-    }
-
+    const SpiStatus status{spi_.transfer(command, nullptr, command_size)};
+    if (status != SpiStatus::ok) return status;
     return spi_.transfer(nullptr, receive, receive_size);
+}
+
+SpiStatus SpiDevice::write_then_read_dma(const std::uint8_t* command,
+                                         std::size_t command_size,
+                                         std::uint8_t* receive,
+                                         std::size_t receive_size) noexcept {
+    ChipSelectGuard chip_select_guard{chip_select_, chip_select_hold_us_};
+    const SpiStatus status{spi_.transfer_dma(command, nullptr, command_size)};
+    if (status != SpiStatus::ok) return status;
+    return spi_.transfer_dma(nullptr, receive, receive_size);
 }
 
 } // namespace platform

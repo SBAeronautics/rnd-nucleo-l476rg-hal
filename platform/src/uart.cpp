@@ -73,28 +73,21 @@ UartStatus Uart::write_dma(const std::uint8_t* data, std::size_t size) noexcept 
      * DMA completion means the final byte was written to the USART.
      * Wait until USART finishes physically transmitting it.
      */
-    while (LL_USART_IsActiveFlag_TC(instance_) == 0U) {
-    }
+    while (LL_USART_IsActiveFlag_TC(instance_) == 0U);
 
     return UartStatus::ok;
 }
 
 UartStatus Uart::write_dma(std::string_view text) noexcept {
-    return write_dma(
-        reinterpret_cast<const std::uint8_t*>(text.data()),
-        text.size());
+    return write_dma(reinterpret_cast<const std::uint8_t*>(text.data()),
+                     text.size());
 }
 
 UartStatus Uart::write_line_dma(std::string_view text) noexcept {
     const UartStatus status{write_dma(text)};
-
     if (status != UartStatus::ok) return status;
-
     static constexpr std::uint8_t line_ending[]{'\r', '\n'};
-
-    return write_dma(
-        line_ending,
-        sizeof(line_ending));
+    return write_dma(line_ending, sizeof(line_ending));
 }
 
 bool Uart::transmitting_dma() const noexcept {

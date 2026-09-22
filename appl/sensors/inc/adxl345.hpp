@@ -38,8 +38,7 @@ class Adxl345 final : public Sensor<AccelerationSample> {
      * @param chip_select_pin GPIO pin connected to the sensor's active-low
      * chip-select input.
      */
-    Adxl345(platform::Spi& spi,
-            platform::GpioPin chip_select_pin) noexcept;
+    Adxl345(platform::Spi& spi, platform::GpioPin chip_select_pin) noexcept;
 
     // -------------------------------------------------------------------------
     // Public Member Methods
@@ -92,8 +91,7 @@ class Adxl345 final : public Sensor<AccelerationSample> {
      * @param value Destination for the register value.
      * @return Status of the register read.
      */
-    [[nodiscard]] SensorStatus read_register(Register register_address,
-                                             std::uint8_t& value) noexcept;
+    [[nodiscard]] SensorStatus read_register(Register register_address, std::uint8_t& value) noexcept;
 
     /**
      * @brief Reads consecutive ADXL345 registers.
@@ -103,9 +101,7 @@ class Adxl345 final : public Sensor<AccelerationSample> {
      * @param count Number of registers to read.
      * @return Status of the register read.
      */
-    [[nodiscard]] SensorStatus read_registers(Register start_address,
-                                              std::uint8_t* values,
-                                              std::size_t count) noexcept;
+    [[nodiscard]] SensorStatus read_registers(Register start_address, std::uint8_t* values, std::size_t count) noexcept;
 
     /**
      * @brief Writes one ADXL345 register.
@@ -114,8 +110,7 @@ class Adxl345 final : public Sensor<AccelerationSample> {
      * @param value Value to write.
      * @return Status of the register write.
      */
-    [[nodiscard]] SensorStatus write_register(Register register_address,
-                                              std::uint8_t value) noexcept;
+    [[nodiscard]] SensorStatus write_register(Register register_address, std::uint8_t value) noexcept;
 
     /**
      * @brief Converts an SPI status into a sensor status.
@@ -132,8 +127,7 @@ class Adxl345 final : public Sensor<AccelerationSample> {
      * @param high Most-significant byte.
      * @return Signed 16-bit acceleration value.
      */
-    [[nodiscard]] static std::int16_t combine_bytes(std::uint8_t low,
-                                                    std::uint8_t high) noexcept;
+    [[nodiscard]] static std::int16_t combine_bytes(std::uint8_t low, std::uint8_t high) noexcept;
 
     platform::SpiDevice device_;
     bool initialized_{false};
@@ -191,10 +185,7 @@ class Adxl345 final : public Sensor<AccelerationSample> {
  * @param capacity Capacity of the destination buffer.
  * @return Number of characters written to the buffer.
  */
-[[nodiscard]]
-std::size_t format_sample(const AccelerationSample& sample,
-                          char* buffer,
-                          std::size_t capacity) noexcept;
+[[nodiscard]] std::size_t format_sample(const AccelerationSample& sample, char* buffer, std::size_t capacity) noexcept;
 
 } // namespace application::sensors
 

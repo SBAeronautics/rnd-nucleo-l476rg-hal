@@ -11,6 +11,32 @@ extern "C" void EXTI15_10_IRQHandler(void) {
         handle_user_button_exti();
 }
 
+extern "C" void DMA1_Channel2_IRQHandler() {
+    // SPI1 RX DMA transfer complete.
+    if (LL_DMA_IsActiveFlag_TC2(DMA1) != 0U) {
+        LL_DMA_ClearFlag_TC2(DMA1);
+        platform::nucleo_l476rg::detail::handle_spi1_receive_dma_complete();
+    }
+    // SPI1 RX DMA transfer error.
+    if (LL_DMA_IsActiveFlag_TE2(DMA1) != 0U) {
+        LL_DMA_ClearFlag_TE2(DMA1);
+        platform::nucleo_l476rg::detail::handle_spi1_dma_error();
+    }
+}
+
+extern "C" void DMA1_Channel3_IRQHandler() {
+    // SPI1 TX DMA transfer complete.
+    if (LL_DMA_IsActiveFlag_TC3(DMA1) != 0U) {
+        LL_DMA_ClearFlag_TC3(DMA1);
+        platform::nucleo_l476rg::detail::handle_spi1_transmit_dma_complete();
+    }
+    // SPI1 TX DMA transfer error.
+    if (LL_DMA_IsActiveFlag_TE3(DMA1) != 0U) {
+        LL_DMA_ClearFlag_TE3(DMA1);
+        platform::nucleo_l476rg::detail::handle_spi1_dma_error();
+    }
+}
+
 extern "C" void DMA1_Channel7_IRQHandler() {
     if (LL_DMA_IsActiveFlag_TC7(DMA1) != 0U) {
         LL_DMA_ClearFlag_TC7(DMA1);

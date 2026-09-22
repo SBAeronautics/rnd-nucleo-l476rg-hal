@@ -24,17 +24,24 @@ extern "C" {
 
 namespace {
 
-platform::GpioOutput status_led_device{GPIOA, LL_GPIO_PIN_5, ActiveLevel::high};
-platform::GpioInput user_button_device{GPIOC, LL_GPIO_PIN_13, ActiveLevel::low};
-platform::Spi spi1_device{SPI1};
-platform::Uart console_device{USART2, platform::DmaChannel{DMA1, LL_DMA_CHANNEL_7}};
+platform::GpioOutput status_led_device{GPIOA,
+                                       LL_GPIO_PIN_5,
+                                       ActiveLevel::high};
+platform::GpioInput user_button_device{GPIOC,
+                                       LL_GPIO_PIN_13,
+                                       ActiveLevel::low};
+platform::Spi spi1_device{SPI1,
+                          platform::DmaChannel{DMA1, LL_DMA_CHANNEL_3},
+                          platform::DmaChannel{DMA1, LL_DMA_CHANNEL_2}};
+platform::Uart console_device{USART2,
+                              platform::DmaChannel{DMA1, LL_DMA_CHANNEL_7}};
 
 std::atomic_bool user_button_press_pending{false};
 
 void configure_arduino_spi1() noexcept {
     LL_SPI_Disable(SPI1);
     LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA |
-                               LL_AHB2_GRP1_PERIPH_GPIOB);
+                             LL_AHB2_GRP1_PERIPH_GPIOB);
 
     // Release the application's SPI pin mapping before selecting PA5/6/7.
     LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_3, LL_GPIO_MODE_ANALOG);
@@ -147,6 +154,18 @@ bool take_user_button_press() noexcept {
 }
 
 namespace detail {
+
+void handle_spi1_transmit_dma_complete() noexcept {
+    spi1_device.handle_transmit_dma_complete();
+}
+
+void handle_spi1_receive_dma_complete() noexcept {
+    spi1_device.handle_receive_dma_complete();
+}
+
+void handle_spi1_dma_error() noexcept {
+    spi1_device.handle_dma_error();
+}
 
 void handle_console_transmit_dma_complete() noexcept {
     console_device.handle_transmit_dma_complete();
