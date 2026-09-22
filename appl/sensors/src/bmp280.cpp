@@ -1,4 +1,5 @@
 #include "adxl345.hpp"
+
 namespace application::sensors {
 
 Adxl345::Adxl345(platform::Spi& spi,

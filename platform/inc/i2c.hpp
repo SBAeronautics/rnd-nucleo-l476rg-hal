@@ -1,4 +1,4 @@
- #ifndef PLATFORM_INC_I2C_HPP
+#ifndef PLATFORM_INC_I2C_HPP
 #define PLATFORM_INC_I2C_HPP
 
 #include "stm32l4xx.h"
