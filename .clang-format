@@ -16,8 +16,8 @@ BreakBeforeBraces: Attach
 
 # Functions and control statements
 AllowShortFunctionsOnASingleLine: Empty
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
 SpaceBeforeParens: ControlStatements
 AllowShortBlocksOnASingleLine: Empty
 

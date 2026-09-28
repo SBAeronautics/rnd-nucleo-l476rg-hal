@@ -46,6 +46,8 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+/* Allow the platform interrupt implementation to override the generated stub. */
+void DMA1_Channel7_IRQHandler(void) __attribute__((weak));
 
 /* USER CODE END PFP */
 

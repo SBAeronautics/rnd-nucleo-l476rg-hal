@@ -8,11 +8,13 @@ namespace platform::clock {
 /**
  * @brief Available system-clock sources.
  */
-enum class Source : std::uint8_t { msi,
-                                   hsi16,
-                                   hse,
-                                   pll,
-                                   unknown };
+enum class Source : std::uint8_t {
+    msi,
+    hsi16,
+    hse,
+    pll,
+    unknown
+};
 
 /**
  * @brief Configures the MCU system clock.
@@ -46,6 +48,15 @@ void configure() noexcept;
  * from performing other work during the delay.
  */
 void delay_ms(std::uint32_t milliseconds) noexcept;
+
+/**
+ * @brief Busy-waits for at least the requested number of microseconds.
+ *
+ * Uses the Cortex-M4 cycle counter and enables it without resetting its value.
+ * Call after clock configuration; SystemCoreClock must reflect the CPU clock.
+ * Interrupts remain enabled and may extend the delay.
+ */
+void delay_us(std::uint32_t microseconds) noexcept;
 
 } // namespace platform::clock
 

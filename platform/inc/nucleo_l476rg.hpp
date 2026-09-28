@@ -3,6 +3,7 @@
 
 #include "digital_input.hpp"
 #include "digital_output.hpp"
+#include "dma.hpp"
 #include "gpio.hpp"
 #include "spi.hpp"
 #include "stm32l4xx.h"
@@ -12,14 +13,25 @@
 namespace platform::nucleo_l476rg {
 
 /**
+ * @brief Selects the board's SPI1 wiring and bus configuration.
+ */
+enum class Spi1Profile : std::uint8_t {
+    generated,    ///< CubeMX settings used by the main application.
+    arduino_mode0 ///< PA5/6/7, PB6 CS, Mode 0, 8-bit MSB-first, 625 kHz.
+};
+
+/**
  * @brief Initializes the NUCLEO-L476RG platform.
  *
  * Configures the system clock, SysTick time base, GPIO peripherals, status LED,
  * and user-button interrupt.
  *
+ * @param spi1_profile SPI1 board configuration. The Arduino profile also
+ * configures PB6 as an inactive-high chip-select output and reserves PA5 for
+ * SCK, making the status LED unavailable.
  * @note Call this function once before accessing any board devices.
  */
-void initialize() noexcept;
+void initialize(Spi1Profile spi1_profile = Spi1Profile::generated) noexcept;
 
 // -------------------------------------------------------------------------
 // On-board LED (PA5)
@@ -84,6 +96,11 @@ namespace pins {
  */
 extern const GpioPin pa4;
 
+/**
+ * @brief PB6 chip-select pin, configured by the arduino_mode0 SPI1 profile.
+ */
+extern const GpioPin pb6;
+
 } // namespace pins
 
 namespace detail {
@@ -97,6 +114,36 @@ namespace detail {
  * @note Intended to be called only from `EXTI15_10_IRQHandler()`.
  */
 void handle_user_button_exti() noexcept;
+
+/**
+ * @brief Handles completion of an SPI1 transmit DMA transfer.
+ * @note Intended to be called only from `DMA1_Channel3_IRQHandler()`.
+ */
+void handle_spi1_transmit_dma_complete() noexcept;
+
+/**
+ * @brief Handles completion of an SPI1 receive DMA transfer.
+ * @note Intended to be called only from `DMA1_Channel2_IRQHandler()`.
+ */
+void handle_spi1_receive_dma_complete() noexcept;
+
+/**
+ * @brief Handles an SPI1 DMA transfer error.
+ * @note Intended to be called only from `DMA1_Channel2_IRQHandler()` or `DMA1_Channel3_IRQHandler()`.
+ */
+void handle_spi1_dma_error() noexcept;
+
+/**
+ * @brief Handles completion of the console UART transmit DMA transfer.
+ * @note Intended to be called only from `DMA1_Channel7_IRQHandler()`.
+ */
+void handle_console_transmit_dma_complete() noexcept;
+
+/**
+ * @brief Handles an error during the console UART transmit DMA transfer.
+ * @note Intended to be called only from `DMA1_Channel7_IRQHandler()`.
+ */
+void handle_console_transmit_dma_error() noexcept;
 
 } // namespace detail
 
